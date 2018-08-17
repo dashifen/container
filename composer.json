@@ -1,0 +1,23 @@
+{
+    "name": "dashifen/containers",
+    "description": "A read-only with setters style object from which many objects can grow.",
+    "license": "WTFPL",
+    "type": "library",
+    "authors": [
+        {
+            "name": "David Dashifen Kees",
+            "email": "dashifen@dashifen.com",
+            "role": "developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dashifen\\Container\\": "src"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.0",
+        "dashifen/exception": "^1"
+    }
+}
