@@ -2,7 +2,6 @@
 
 namespace Dashifen\Container;
 
-use Dashifen\Container\ContainerException\ContainerException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
@@ -130,10 +129,15 @@ abstract class AbstractContainer {
 	 * @param string $property
 	 *
 	 * @return mixed|null
+	 * @throws ReflectionException
+	 * @throws ContainerException
 	 */
 	public function __get(string $property) {
-		return in_array($property, $this->__properties)
-			? $this->{$property}
-			: null;
+		if (!in_array($property, $this->__properties)) {
+			throw new ContainerException("Unknown property: $property.",
+				ContainerException::UNKNOWN_PROPERTY);
+		}
+
+		return $this->{$property};
 	}
 }

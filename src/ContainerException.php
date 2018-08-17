@@ -1,6 +1,6 @@
 <?php
 
-namespace Dashifen\Container\ContainerException;
+namespace Dashifen\Container;
 
 use Dashifen\Exception\Exception;
 
