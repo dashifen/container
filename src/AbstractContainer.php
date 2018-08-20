@@ -140,4 +140,18 @@ abstract class AbstractContainer {
 
 		return $this->{$property};
 	}
+
+	/**
+	 * __isset()
+	 *
+	 * This simply returns true if the requested property exists and is
+	 * not hidden.  This is to make empty() and __get() play well together.
+	 *
+	 * @param string $property
+	 *
+	 * @return bool
+	 */
+	public function __isset(string $property) {
+		return in_array($property, $this->__properties);
+	}
 }
