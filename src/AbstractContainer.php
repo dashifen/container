@@ -5,12 +5,13 @@ namespace Dashifen\Container;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
+use JsonSerializable;
 
 /**
  * Class AbstractContainer
  * @package Dashifen\Container
  */
-abstract class AbstractContainer {
+abstract class AbstractContainer implements JsonSerializable {
 	/**
 	 * @var array
 	 */
@@ -153,5 +154,25 @@ abstract class AbstractContainer {
 	 */
 	public function __isset(string $property) {
 		return in_array($property, $this->__properties);
+	}
+
+	/**
+	 * jsonSerialize
+	 *
+	 * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize() {
+
+		// that which we want to JSON-ify is the list of properties to which
+		// __get() has access.  thus, we can loop over __properties adding them
+		// to an array, and then, we return them.
+
+		foreach ($this->__properties as $property) {
+			$jsonData[$property] = $this->{$property};
+		}
+
+		return $jsonData ?? [];
 	}
 }
