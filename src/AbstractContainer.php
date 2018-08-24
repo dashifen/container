@@ -122,6 +122,52 @@ abstract class AbstractContainer implements JsonSerializable {
 	abstract protected function getHiddenPropertyNames(): array;
 
 	/**
+	 * convertFieldToProperty
+	 *
+	 * Given a string using dashes to separate words in the way HTML likes
+	 * it, return a camelCase string like PHP properties like it.
+	 *
+	 * @param string $field
+	 *
+	 * @return string
+	 */
+	protected function convertFieldToProperty(string $field) {
+		return preg_replace_callback("/-(\w)/", function($matches) {
+
+			// for any character preceded by a dash, we want to return the
+			// capital version of that letter.  notice that this also removes
+			// the dash since it's included in the match.  thus, event-name
+			// becomes eventName.
+
+			return strtoupper($matches[1]);
+		}, $field);
+	}
+
+	/**
+	 * convertPropertyToField
+	 *
+	 * Given a camelCases string, return it using dashes to separate words
+	 * like HTML likes it.
+	 *
+	 * @param string $property
+	 *
+	 * @return string
+	 */
+	protected function convertPropertyToField(string $property) {
+		return preg_replace_callback("/(?<=[a-z])([A-Z])/", function($matches) {
+
+			// this time, any capital letter preceded by a lowercase one
+			// is converted to a dash followed by the lowercase version of
+			// it.  unlike the prior method, we need to leave the originally
+			// lowercase letter in the string, so we use a positive look-
+			// behind group to identify it.  thus, eventName becomes
+			// event-name.
+
+			return "-" . strtolower($matches[1]);
+		}, $property);
+	}
+
+	/**
 	 * __get()
 	 *
 	 * Given the name of a property, if it's in the $__properties property,
