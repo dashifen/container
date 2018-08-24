@@ -31,9 +31,28 @@ abstract class AbstractContainer implements JsonSerializable {
 	public function __construct(array $data = []) {
 		$this->initializeProperties();
 
-		foreach ($data as $field => $value) {
-			if (property_exists($this, $field)) {
-				$setter = "set" . ucfirst($field);
+		foreach ($data as $property => $value) {
+
+			// if our $property doesn't exist as-is, we'll try passing it
+			// through one of our methods below to see if it's an HTML style
+			// form field name that we can convert into a property's name
+			// here.
+
+			if (!property_exists($this, $property)) {
+				$property = $this->convertFieldToProperty($property);
+			}
+
+			// now, if the property exists either in it's original format or
+			// in the converted one, we'll proceed.  otherwise, an exception
+			// is thrown in the else-block below.
+
+			if (property_exists($this, $property)) {
+
+				// now, we should have a setter for each of our properties.
+				// if not, we'll throw an exception.  but, if we have a setter
+				// for our property, we call it and pass in our value.
+
+				$setter = "set" . ucfirst($property);
 				if (method_exists($this, $setter)) {
 					$this->{$setter}($value);
 				} else {
@@ -55,7 +74,7 @@ abstract class AbstractContainer implements JsonSerializable {
 				// reasoning applies:  this could be a problem, and only the
 				// programmer of the app using this object will know.
 
-				throw new ContainerException("Unknown property: $field.",
+				throw new ContainerException("Unknown property: $property.",
 					ContainerException::UNKNOWN_PROPERTY);
 			}
 		}
