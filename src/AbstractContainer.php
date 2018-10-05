@@ -202,7 +202,7 @@ abstract class AbstractContainer implements JsonSerializable {
 	 *
 	 * @param string $property
 	 *
-	 * @return mixed|null
+	 * @return mixed
 	 * @throws ContainerException
 	 */
 	public function __get(string $property) {
@@ -211,7 +211,15 @@ abstract class AbstractContainer implements JsonSerializable {
 				ContainerException::UNKNOWN_PROPERTY);
 		}
 
-		return $this->{$property};
+		// normally, we can just return our property directly, but in case
+		// someone wants to transform it before sending it back (e.g. changing
+		// a date's format), if there is a getter for the requested property,
+		// we'll use it.
+
+		$getter = "get" . ucfirst($property);
+		return method_exists(static::class, $getter)
+			? $this->{$getter}()
+			: $this->{$property};
 	}
 
 	/**
