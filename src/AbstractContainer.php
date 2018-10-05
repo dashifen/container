@@ -25,7 +25,6 @@ abstract class AbstractContainer implements JsonSerializable {
 	 *
 	 * @param array $data
 	 *
-	 * @throws ReflectionException
 	 * @throws ContainerException
 	 */
 	public function __construct(array $data = []) {
@@ -87,7 +86,7 @@ abstract class AbstractContainer implements JsonSerializable {
 	 * and protected properties of our object that should be available via
 	 * the __get() method.
 	 *
-	 * @throws ReflectionException
+	 * @return void
 	 */
 	final private function initializeProperties() {
 
@@ -109,7 +108,6 @@ abstract class AbstractContainer implements JsonSerializable {
 	 * and protected properties.
 	 *
 	 * @return array
-	 * @throws ReflectionException
 	 */
 	final private function getPropertyNames(): array {
 
@@ -117,7 +115,17 @@ abstract class AbstractContainer implements JsonSerializable {
 		// reflect themselves and not this object.  then, we get a list of
 		// their properties such that they're
 
-		$reflection = new ReflectionClass(static::class);
+		try {
+			$reflection = new ReflectionClass(static::class);
+		} catch (ReflectionException $e) {
+
+			// this shouldn't happen since we're reflecting our own object,
+			// but if it ever does, there's nothing we can do but die.
+
+			trigger_error("Unable to reflect self.", E_USER_ERROR);
+			die();
+		}
+
 		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
 
 		// we don't want an array of ReflectionProperty objects in the calling
@@ -195,7 +203,6 @@ abstract class AbstractContainer implements JsonSerializable {
 	 * @param string $property
 	 *
 	 * @return mixed|null
-	 * @throws ReflectionException
 	 * @throws ContainerException
 	 */
 	public function __get(string $property) {
