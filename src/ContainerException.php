@@ -13,4 +13,5 @@ class ContainerException extends Exception {
 
 	const UNKNOWN_PROPERTY = -1;
 	const UNKNOWN_SETTER = -2;
+	const INVALID_VALUE = -3;
 }
