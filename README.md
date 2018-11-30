@@ -33,7 +33,9 @@ Getters must be in the form of `"get" . ucfirst($propertyName)`.  So, the `start
 
 ## Setters
 
-Containers do not implement `__set()`, so if you want setters for your properties, you have to write them yourself.  Like getters, they must be in the format of `"set" . ucfirst($propertyName)`.  Thus, the setter for `startDate` must be `setStartDate()`.  If you implement setters, they will be called from the Container's constructor when it iterates over it's array argument.
+Containers do not implement `__set()`, so if you want setters for your properties, you have to write them yourself.  By default, the `AbstractContainer` object will use setters within it's `__construct()` method.  So, if you want to use that method, you'll need to to create them.
+
+Like getters, they must be in the format of `"set" . ucfirst($propertyName)`.  Thus, the setter for `startDate` must be `setStartDate()`.  If you implement setters, they will be called from the Container's constructor when it iterates over it's array argument.
 
 ### Example
 
