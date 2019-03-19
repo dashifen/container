@@ -11,7 +11,7 @@ use JsonSerializable;
  * Class AbstractContainer
  * @package Dashifen\Container
  */
-abstract class AbstractContainer implements JsonSerializable {
+abstract class AbstractContainer implements JsonSerializable, ContainerInterface {
 	/**
 	 * @var array
 	 */
@@ -254,5 +254,23 @@ abstract class AbstractContainer implements JsonSerializable {
 		}
 
 		return $jsonData ?? [];
+	}
+
+	/**
+	 * toArray
+	 *
+	 * Returns the non-hidden protected properties of this object as an
+	 * associative array mapping property name to value.
+	 *
+	 * @return array
+	 */
+	public function toArray(): array {
+
+		// what we do here is the same as what we do when serializing the
+		// object to JSON.  so, we can just return that value here.  why
+		// not just use that method everywhere?  because it's name is
+		// unfamiliar while {$object}->toArray() is pretty common.
+
+		return $this->jsonSerialize();
 	}
 }
